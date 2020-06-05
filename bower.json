@@ -1,0 +1,7 @@
+{
+  "name": "milligram-tronweb-starter",
+  "private": true,
+  "dependencies": {
+    "milligram": "latest"
+  }
+}

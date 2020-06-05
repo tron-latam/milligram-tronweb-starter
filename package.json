@@ -1,0 +1,58 @@
+{
+  "name": "milligram-tronweb-starter",
+  "version": "0.1.0",
+  "description": "A super simple boilerplate project with Milligram and TronWeb.",
+  "homepage": "https://github.com/tron-latam",
+  "repository": "tron-latam/milligram-tronweb-starter",
+  "license": "MIT",
+  "author": "CJ Patoilo <cryptouru@gmail.com>",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "milligram": "latest",
+    "tronweb": "^2.10.2"
+  },
+  "devDependencies": {
+    "bower": "^1.8.8",
+    "browser-sync": "^2.26.7",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.4",
+    "ncp": "^2.0.0",
+    "npm-run-all": "^4.1.5",
+    "onchange": "^7.0.2",
+    "prettier-standard": "^16.3.0",
+    "rimraf": "^3.0.2",
+    "tronbox": "^2.7.12"
+  },
+  "scripts": {
+    "start": "run-p watch serve",
+    "build": "rimraf dist && ncp src dist && ncp bower_components dist/lib && ncp node_modules/tronweb/dist dist/lib/tronweb",
+    "watch": "onchange src/* -- npm run build",
+    "serve": "browser-sync --no-notify start -s dist -f dist",
+    "test": "npm run build",
+    "lint": "prettier-standard --check",
+    "postinstall": "bower i",
+    "prestart": "npm i",
+    "tronbox-compile": "tronbox compile --compile-all",
+    "tronbox-migrate": "tronbox migrate --reset --network shasta",
+    "app-setup": "node ./console/setup.js"
+  },
+  "engines": {
+    "node": "^12.16.2",
+    "npm": "^6.14.4"
+  },
+  "prettier": {
+    "jsxSingleQuote": false,
+    "trailingComma": "all"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*": [
+      "prettier-standard --format",
+      "git add"
+    ]
+  }
+}
