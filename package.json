@@ -5,7 +5,7 @@
   "homepage": "https://github.com/tron-latam",
   "repository": "tron-latam/milligram-tronweb-starter",
   "license": "MIT",
-  "author": "CJ Patoilo <cryptouru@gmail.com>",
+  "author": "Cryptouru <cryptouru@gmail.com>",
   "dependencies": {
     "dotenv": "^8.2.0",
     "milligram": "latest",
@@ -30,8 +30,8 @@
     "serve": "browser-sync --no-notify start -s dist -f dist",
     "test": "npm run build",
     "lint": "prettier-standard --check",
+    "lint:format": "prettier-standard --lint 'src/**'",
     "postinstall": "bower i",
-    "prestart": "npm i",
     "tronbox-compile": "tronbox compile --compile-all",
     "tronbox-migrate": "tronbox migrate --reset --network shasta",
     "app-setup": "node ./console/setup.js"
