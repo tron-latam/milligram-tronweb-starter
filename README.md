@@ -43,7 +43,7 @@ $ npm run app-setup
 -  `npm run lint:format` - check and format with code linter.
 
 
-## Table of Contents
+## External References
 
 -  [TronBox User Guide](https://developers.tron.network/docs/tron-box-user-guide)
 
