@@ -1,7 +1,11 @@
 let contract
 let tronWebApi
 let loggedIn = false
-
+/**
+ * Fetches candidates from contract and formats output
+ * @param {Contract} contract
+ * @param {int} candidateId
+ */
 async function getCandidate (contract, candidateId) {
   const callResult = await contract.candidates(candidateId).call()
   return {
@@ -11,6 +15,10 @@ async function getCandidate (contract, candidateId) {
   }
 }
 
+/**
+ * Adds displats candidates array
+ * @param {Array<{}>} candidates
+ */
 function loadTableWithCandidates (candidates) {
   const table = document.querySelector('#candidates')
   for (const element of candidates) {
@@ -19,6 +27,10 @@ function loadTableWithCandidates (candidates) {
       const cell = row.insertCell()
       const text = document.createTextNode(element[key])
       cell.appendChild(text)
+      if (key === 'voteCount') {
+        cell.setAttribute('data-candidate', element.id)
+        cell.setAttribute('class', 'vote-count')
+      }
     }
     const cell = row.insertCell()
     const a = document.createElement('a')
@@ -29,8 +41,12 @@ function loadTableWithCandidates (candidates) {
   }
 }
 
+/**
+ * Checks if tronlink is enabled and loads contract
+ */
 async function tronWebInit () {
   if (window.tronWeb) {
+    // TronLink installed
     tronWebApi = window.tronWeb
     loggedIn = true
   } else {
@@ -63,14 +79,16 @@ document.addEventListener(
   async function (event) {
     // If the clicked element doesn't have the right selector, bail
     if (!event.target.matches('.vote-candidate')) return
-
     if (!loggedIn) {
       alert('You need tronLink instaled to vote')
       return
     }
 
+    event.preventDefault()
+
     const candidateId = event.target.getAttribute('data-candidate')
     try {
+      // Call SmartContracts map to check if voted
       const didVote = await contract
         .voter(tronWebApi.defaultAddress.base58)
         .call()
@@ -78,9 +96,13 @@ document.addEventListener(
         alert('You can only vote once')
         return
       }
-      const receipt = await contract.methods
+      // Send transaction to the blockchain
+      await contract.methods
         .vote(candidateId)
         .send({ shouldPollResponse: true })
+      // Increase display count
+      document.querySelector('td[data-candidate="' + candidateId + '"]')
+        .innerText++
     } catch (e) {
       console.error(e)
     }
