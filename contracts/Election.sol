@@ -1,4 +1,4 @@
-pragma solidity >=0.4.23 <0.6.0;
+pragma solidity >=0.5 <=0.5.10;
 
 contract Election{
 
@@ -12,7 +12,8 @@ contract Election{
     mapping (address => bool) public voter;
 
     event eventVote(
-        uint indexed _candidateid
+        uint indexed _candidateid,
+        address indexed _voteSender
     );
 
     constructor () public {
@@ -36,7 +37,7 @@ contract Election{
 
         candidates[_candidateid].voteCount ++;
 
-        emit eventVote(_candidateid);
+        emit eventVote(_candidateid, msg.sender);
 
     }
 
