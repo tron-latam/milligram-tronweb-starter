@@ -1,52 +1,9 @@
 let contract
 let tronWebApi
-
-window.addEventListener('load', async function () {
-  try {
-    const contractAddress = contractConfig.contractAddress
-    tronWebApi = window.tronWeb
-
-    contract = await tronWebApi.contract().at(contractAddress)
-    const candidateCount = (await contract.candidatecount().call()).toNumber()
-    const candidates = []
-    for (let i = 0; i < candidateCount; i++) {
-      const candidate = await getCandidate(contract, i)
-      candidates.push(candidate)
-    }
-    console.log(candidateCount)
-    console.log(candidates)
-    loadTableWithCandidates(candidates)
-  } catch (e) {
-    console.error(e)
-    // Deal with the fact the chain failed
-  }
-});
-
-document.addEventListener(
-  'click',
-  async function (event) {
-    // If the clicked element doesn't have the right selector, bail
-    if (!event.target.matches('.vote-candidate')) return
-
-    // Don't follow the link
-    event.preventDefault()
-
-    // Log the clicked element in the console
-    const candidateId = event.target.getAttribute('data-candidate')
-    console.log(event.target)
-    const txId = await contract.methods.vote(candidateId).send()
-    let res = await tronWebApi.trx.getTransactionInfo(txId)
-    while (!res.result) {
-      res = await tronWebApi.trx.getTransactionInfo(txId)
-    }
-    console.log(res)
-  },
-  false,
-);
+let loggedIn = false
 
 async function getCandidate (contract, candidateId) {
   const callResult = await contract.candidates(candidateId).call()
-  console.log(callResult)
   return {
     id: callResult.id.toNumber(),
     name: tronWebApi.toUtf8(callResult.name).trim(),
@@ -71,3 +28,62 @@ function loadTableWithCandidates (candidates) {
     cell.appendChild(a)
   }
 }
+
+async function tronWebInit () {
+  if (window.tronWeb) {
+    tronWebApi = window.tronWeb
+    loggedIn = true
+  } else {
+    tronWebApi = new TronWeb({
+      fullHost: contractConfig.fullHost,
+      privateKey: contractConfig.privateKey,
+    })
+  }
+  contract = await tronWebApi.contract().at(contractConfig.contractAddress)
+  toPromise = tronWeb.injectPromise
+}
+
+window.addEventListener('load', async function () {
+  try {
+    await tronWebInit()
+    const candidateCount = (await contract.candidatecount().call()).toNumber()
+    const candidates = []
+    for (let i = 0; i < candidateCount; i++) {
+      const candidate = await getCandidate(contract, i)
+      candidates.push(candidate)
+    }
+    loadTableWithCandidates(candidates)
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+document.addEventListener(
+  'click',
+  async function (event) {
+    // If the clicked element doesn't have the right selector, bail
+    if (!event.target.matches('.vote-candidate')) return
+
+    if (!loggedIn) {
+      alert('You need tronLink instaled to vote')
+      return
+    }
+
+    const candidateId = event.target.getAttribute('data-candidate')
+    try {
+      const didVote = await contract
+        .voter(tronWebApi.defaultAddress.base58)
+        .call()
+      if (didVote) {
+        alert('You can only vote once')
+        return
+      }
+      const receipt = await contract.methods
+        .vote(candidateId)
+        .send({ shouldPollResponse: true })
+    } catch (e) {
+      console.error(e)
+    }
+  },
+  false,
+)
