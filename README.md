@@ -6,7 +6,7 @@
 
 This starter provides a minimal setup for a fast and clean starting point.  It intends to enable anyone to quickly get hands on Solidity, TronBox and TronWeb. 
 
-It consists of a simple votins system which enables any Tron address to vote a single time over a predefined set of candidates. It is ready to be deployed to the test net with minimal setup. Hope you enjoy!
+It consists of a simple votinh system that enables any Tron address to vote a single time over a predefined set of candidates. It is ready to be deployed into the test net with minimal setup. Hope you enjoy!
 
 ## Getting Started
 
@@ -40,7 +40,7 @@ $ npm run app-setup
 -  `npm start` - starts the development server with hot reloading enabled.
 -  `npm run build` - generates the distribution files.
 -  `npm run lint` - check with code linter.
--   `npm run lint:format` - check and format with code linter.
+-  `npm run lint:format` - check and format with code linter.
 
 
 ## Table of Contents
