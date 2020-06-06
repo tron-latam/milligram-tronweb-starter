@@ -6,7 +6,7 @@
 
 This starter provides a minimal setup for a fast and clean starting point.  It intends to enable anyone to quickly get hands on Solidity, TronBox and TronWeb. 
 
-It consists of a simple votinh system that enables any Tron address to vote a single time over a predefined set of candidates. It is ready to be deployed into the test net with minimal setup. Hope you enjoy!
+It consists of a simple voting system that enables any Tron address to vote a single time over a predefined set of candidates. It is ready to be deployed into the test net with minimal setup. Hope you enjoy!
 
 ## Getting Started
 
